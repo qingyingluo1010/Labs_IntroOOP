@@ -1,3 +1,13 @@
+from enum import Enum
+import Support as dtSupport
+
+
+class Properties(Enum):
+    """ Index of parameters in decision and chance node dictionaries. """
+    COST = 0
+    NODES = 1
+    PROB = 2
+
 
 class Node:
     """ base class """
@@ -17,14 +27,23 @@ class Node:
 
 class ChanceNode(Node):
 
-    def __init__(self, name, cost, future_nodes, probs):
+    def __init__(self, name, dict_chances, dict_terminals):
         """
-        :param future_nodes: future nodes connected to this node
-        :param probs: probability of the future nodes
+        :param dict_chances: dictionary of chance nodes
+        :param dict_terminals: dictionary of terminal nodes
         """
-        Node.__init__(self, name, cost)
-        self.futureNodes = future_nodes
-        self.probs = probs
+        Node.__init__(self, name)
+        self.futureNodes = []  # list of future node objects
+        self.pFutureNodes = []  # probability of future nodes
+
+        self.cost = dict_chances[name][Properties.COST.value]  # find cost
+        self.pFutureNodes = dict_chances[name][Properties.PROB.value]  # find probability of each future nodes
+
+        # find the names of future nodes for this chance node
+        names = dict_chances[name][Properties.NODES.value]
+        # add the future nodes
+        self.futureNodes = dtSupport.create_future_nodes \
+            (names, dict_chances, dict_terminals)
 
     def get_expected_cost(self):
         """
@@ -50,20 +69,4 @@ class TerminalNode(Node):
         return self.cost
 
 
-# create the terminal nodes
-T1 = TerminalNode('T1', 10)
-T2 = TerminalNode('T2', 20)
-T3 = TerminalNode('T3', 30)
-T4 = TerminalNode('T4', 40)
 
-# create the future nodes of C2
-C2FutureNodes =[T1, T2, T3]
-# create C2
-C2 = ChanceNode('C2', 15, C2FutureNodes, [0.1, 0.3, 0.7])
-# create the future nodes of C1
-C1FutureNodes = [C2, T4]
-# create C1
-C1 = ChanceNode('C1', 0, C1FutureNodes, [0.5, 0.5])
-
-# print the expect cost of C1
-print(C1.get_expected_cost())
