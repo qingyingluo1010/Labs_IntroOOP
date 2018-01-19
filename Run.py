@@ -8,7 +8,7 @@ dictTerminals = {'T1': 10,
                  'T4': 40};
 
 # dictionary for chance nodes
-#           // key:  cost,   [future nodes],    [probabilities]
+#           // key:  cost,  [future nodes],     [probabilities]
 dictChances = {'C1': [0,    ['C2', 'T4'],       [0.5, 0.5]],
                'C2': [15,   ['T1', 'T2', 'T3'], [0.1, 0.2, 0.7]]};
 
