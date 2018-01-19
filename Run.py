@@ -5,10 +5,11 @@ import Classes as dtClasses
 dictTerminals = {'T1': 10,
                  'T2': 20,
                  'T3': 30,
-                 'T4': 40};
+                 'T4': 40,
+                 'T5': 50};
 
 # dictionary for chance nodes
-#           // key:  cost,  [future nodes],     [probabilities]
+#           // key:  cost,  [future nodes], [probabilities]
 dictChances = {'C1': [5,    ['C2', 'T3'],   [0.1, 0.9]],
                'C2': [15,   ['T1', 'T2'],   [0.2, 0.8]],
                'C3': [25,   ['T4', 'T5'],   [0.3, 0.7]]};
