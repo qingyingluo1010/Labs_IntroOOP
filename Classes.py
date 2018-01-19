@@ -1,5 +1,4 @@
 from enum import Enum
-import Support as dtSupport
 
 
 class Properties(Enum):
@@ -22,7 +21,7 @@ class Node:
 
 class ChanceNode(Node):
 
-    def __init__(self, name, dict_chances, dict_terminals):
+    def __init__(self, name, tree_support):
         """
         :param dict_chances: dictionary of chance nodes
         :param dict_terminals: dictionary of terminal nodes
@@ -31,13 +30,10 @@ class ChanceNode(Node):
         self.futureNodes = []  # list of future node objects
         self.pFutureNodes = []  # probabilities of future nodes
 
-        self.cost = dict_chances[name][Properties.COST.value]  # find cost
-        self.pFutureNodes = dict_chances[name][Properties.PROB.value]  # find probability of each future nodes
-
-        # find the names of future nodes for this chance node
-        names = dict_chances[name][Properties.NODES.value]
-        # add the future nodes
-        self.futureNodes = dtSupport.create_future_nodes(names, dict_chances, dict_terminals)
+        self.cost = tree_support.get_cost(name)  # find cost
+        # add the future nodes and their probabilities
+        self.futureNodes = tree_support.create_future_nodes(name)
+        self.pFutureNodes = tree_support.get_prob_future_nodes(name)
 
         # calculate expected cost and utility of this node
         self.eCost = self.cost          # adding the immediate cost
@@ -51,15 +47,61 @@ class ChanceNode(Node):
 
 class TerminalNode(Node):
 
-    def __init__(self, name, dict_terminals):
+    def __init__(self, name, tree_support):
         """ Instantiating a terminal node
         :param name: key of this node
-        :param dict_terminals: dictionary of terminal nodes
         """
         # create the node
         Node.__init__(self, name)
         # find the eCost of this node (for terminal nodes eCost = immediate cost)
-        self.eCost = dict_terminals[name]
+        self.eCost = tree_support.get_cost(name)
 
 
+class TreeSupport:
 
+    def __init__(self, dict_chances, dict_terminals):
+        """
+        :param dict_chances: dictionary of chance nodes
+        :param dict_terminals: dictionary of terminal nodes
+        """
+        self.dictChances = dict_chances
+        self.dictTerminals = dict_terminals
+
+    def create_future_nodes(self, node_name):
+        """ create all future nodes for the node with name provided"""
+
+        # find the names of future nodes for this node
+        names = self.dictChances[node_name][Properties.NODES.value]
+
+        future_nodes = []     # list of future nodes to return
+        for name in names:
+
+            # if this name is associated to a chance node
+            if name in self.dictChances:
+                # create a chance node
+                cn = ChanceNode(name, self)
+                # append this node to the collection of future nodes
+                future_nodes.append(cn)
+
+            # if this name is associated to a terminal node
+            elif name in self.dictTerminals:
+                # instantiate a terminal node
+                tn = TerminalNode(name, self)
+                # append this node to the collection of future nodes
+                future_nodes.append(tn)
+
+        return future_nodes
+
+    def get_cost(self, node_name):
+        """ returns the cost of the node with the name provided """
+        if node_name in self.dictChances:
+            return self.dictChances[node_name][Properties.COST.value]
+        elif node_name in self.dictTerminals:
+            return self.dictTerminals[node_name]
+
+    def get_prob_future_nodes(self, node_name):
+        """ returns the probabilities of future nodes for the node with name provided """
+        if node_name in self.dictChances:
+            return self.dictChances[node_name][Properties.PROB.value]
+        elif node_name in self.dictTerminals:
+            return []

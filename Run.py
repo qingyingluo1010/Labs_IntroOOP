@@ -12,7 +12,9 @@ dictTerminals = {'T1': 10,
 dictChances = {'C1': [0,    ['C2', 'T4'],       [0.5, 0.5]],
                'C2': [15,   ['T1', 'T2', 'T3'], [0.1, 0.2, 0.7]]};
 
-C1 = dtClasses.ChanceNode('C1', dictChances, dictTerminals)
-
+# create a tree support object
+treeSupport = dtClasses.TreeSupport(dictChances, dictTerminals)
+# create C1 chance node
+C1 = dtClasses.ChanceNode('C1', treeSupport)
 # print the expect cost of C1
 print(C1.eCost)
