@@ -14,7 +14,9 @@ dictChances = {'C1': [0,    ['C2', 'T4'],       [0.5, 0.5]],
 
 # create a tree support object
 treeSupport = dtClasses.TreeSupport(dictChances, dictTerminals)
+
 # create C1 chance node
 C1 = dtClasses.ChanceNode('C1', treeSupport)
+
 # print the expect cost of C1
 print(C1.eCost)

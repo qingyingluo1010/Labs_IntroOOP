@@ -22,15 +22,14 @@ class Node:
 class ChanceNode(Node):
 
     def __init__(self, name, tree_support):
-        """
-        :param dict_chances: dictionary of chance nodes
-        :param dict_terminals: dictionary of terminal nodes
-        """
+
+        # create the node
         Node.__init__(self, name)
         self.futureNodes = []  # list of future node objects
         self.pFutureNodes = []  # probabilities of future nodes
 
-        self.cost = tree_support.get_cost(name)  # find cost
+        # find cost
+        self.cost = tree_support.get_cost(name)
         # add the future nodes and their probabilities
         self.futureNodes = tree_support.create_future_nodes(name)
         self.pFutureNodes = tree_support.get_prob_future_nodes(name)
@@ -48,9 +47,7 @@ class ChanceNode(Node):
 class TerminalNode(Node):
 
     def __init__(self, name, tree_support):
-        """ Instantiating a terminal node
-        :param name: key of this node
-        """
+
         # create the node
         Node.__init__(self, name)
         # find the eCost of this node (for terminal nodes eCost = immediate cost)
@@ -94,14 +91,22 @@ class TreeSupport:
 
     def get_cost(self, node_name):
         """ returns the cost of the node with the name provided """
+
+        # if this is a chance node
         if node_name in self.dictChances:
             return self.dictChances[node_name][Properties.COST.value]
+        # else if this is a terminal node
         elif node_name in self.dictTerminals:
             return self.dictTerminals[node_name]
 
     def get_prob_future_nodes(self, node_name):
         """ returns the probabilities of future nodes for the node with name provided """
+
+        # if this is a chance node
         if node_name in self.dictChances:
             return self.dictChances[node_name][Properties.PROB.value]
+
+        #  else if this isa terminal node
         elif node_name in self.dictTerminals:
-            return []
+            return []   # no future nodes for terminal nodes
+
