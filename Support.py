@@ -16,13 +16,13 @@ def create_future_nodes(names, dict_chances, dict_terminals):
         # if this name is associated to a chance node
         if name in dict_chances:
             # create a chance node
-            cn = dtClasses.ChanceNode(name, cp, dict_chances, dict_terminals)
+            cn = dtClasses.ChanceNode(name, dict_chances, dict_terminals)
             # append this node to the collection of future nodes
             fnodes.append(cn)
         # if this name is associated to a terminal node
         elif name in dict_terminals:
             # instantiate a terminal node
-            cn = dtClasses.TerminalNode(name, cp, dict_terminals)
+            cn = dtClasses.TerminalNode(name, dict_terminals)
             # append this node to the collection of future nodes
             fnodes.append(cn)
         i += 1
