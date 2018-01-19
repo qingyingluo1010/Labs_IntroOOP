@@ -19,6 +19,28 @@ class Node:
         self.eCost = 0  # expected cost of visiting this node (includes the immediate cost)
 
 
+class DecisionNode(Node):
+    def __init__(self, name, tree_support):
+
+        # initialize this node
+        Node.__init__(self, name)
+        self.futureNodes = []  # list of future node objects
+
+        # add the future nodes
+        self.futureNodes = tree_support.create_future_nodes(name)
+
+
+    def get_eCosts(self):
+        """ returns the expected cost of each decisions
+        :return: dictionary of outcomes where key = node name and value = expected cost
+        """
+        outcomes = dict()
+        for node in self.futureNodes:
+            outcomes[node.name] = node.eCost
+
+        return outcomes
+
+
 class ChanceNode(Node):
 
     def __init__(self, name, tree_support):
@@ -56,11 +78,13 @@ class TerminalNode(Node):
 
 class TreeSupport:
 
-    def __init__(self, dict_chances, dict_terminals):
+    def __init__(self, dict_decisions, dict_chances, dict_terminals):
         """
+        :param dict_decisions: dictionary of chance nodes
         :param dict_chances: dictionary of chance nodes
         :param dict_terminals: dictionary of terminal nodes
         """
+        self.dictDecisions = dict_decisions
         self.dictChances = dict_chances
         self.dictTerminals = dict_terminals
 
@@ -68,11 +92,15 @@ class TreeSupport:
         """ create all future nodes for the node with name provided"""
 
         # find the names of future nodes for this node
-        names = self.dictChances[node_name][Properties.NODES.value]
+        # if name is associated to a decision node
+        if node_name in self.dictDecisions:
+            names = self.dictDecisions[node_name][Properties.NODES.value]
+        # if name is associated to a chance node
+        elif node_name in self.dictChances:
+            names = self.dictChances[node_name][Properties.NODES.value]
 
         future_nodes = []     # list of future nodes to return
         for name in names:
-
             # if this name is associated to a chance node
             if name in self.dictChances:
                 # create a chance node
