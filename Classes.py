@@ -29,7 +29,6 @@ class DecisionNode(Node):
         # add the future nodes
         self.futureNodes = tree_support.create_future_nodes(name)
 
-
     def get_eCosts(self):
         """ returns the expected cost of each decisions
         :return: dictionary of outcomes where key = node name and value = expected cost
