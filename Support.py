@@ -9,7 +9,7 @@ def create_future_nodes(names, dict_chances, dict_terminals):
     :return: list of future nodes
     """
 
-    fnodes = []     # list of future nodes to return
+    future_nodes = []     # list of future nodes to return
     i = 0           # iterator in future nodes
     for name in names:
 
@@ -18,13 +18,15 @@ def create_future_nodes(names, dict_chances, dict_terminals):
             # create a chance node
             cn = dtClasses.ChanceNode(name, dict_chances, dict_terminals)
             # append this node to the collection of future nodes
-            fnodes.append(cn)
+            future_nodes.append(cn)
+
         # if this name is associated to a terminal node
         elif name in dict_terminals:
             # instantiate a terminal node
             cn = dtClasses.TerminalNode(name, dict_terminals)
             # append this node to the collection of future nodes
-            fnodes.append(cn)
+            future_nodes.append(cn)
+
         i += 1
 
-    return fnodes
+    return future_nodes

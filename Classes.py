@@ -3,7 +3,7 @@ import Support as dtSupport
 
 
 class Properties(Enum):
-    """ Index of parameters in decision and chance node dictionaries. """
+    """ Index of parameters in chance node dictionaries. """
     COST = 0
     NODES = 1
     PROB = 2
@@ -14,7 +14,6 @@ class Node:
     def __init__(self, name):
         """
         :param name: name of this node
-        :param cost: cost of this node
         """
         self.name = name
         self.cost = 0   # immediate cost of visiting this node
@@ -59,7 +58,7 @@ class TerminalNode(Node):
         """
         # create the node
         Node.__init__(self, name)
-        # find the cost of this node (for terminal nodes eCost = immediate cost)
+        # find the eCost of this node (for terminal nodes eCost = immediate cost)
         self.eCost = dict_terminals[name]
 
 
