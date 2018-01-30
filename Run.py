@@ -25,4 +25,4 @@ treeSupport = dtClasses.TreeSupport(dictDecisions, dictChances, dictTerminals)
 D1 = dtClasses.DecisionNode('D1', treeSupport)
 
 # print the expect cost of alternatives
-print(D1.get_eCosts())
+print(D1.get_expected_costs())
